@@ -22,7 +22,16 @@ class ManiuplatorModel:
         (2DoF planar manipulator with the object at the tip)
         """
         q1, q2, q1_dot, q2_dot = x
-        return NotImplementedError()
+        d1 = self.l1 / 2
+        d2 = self.l2 / 2
+        M=np.zeros((2,2))
+        M[0, 0] = self.m1*d1**2 + self.I_1 + self.m2*self.l1**2 + self.m2*d2**2 + 2*self.m2*self.l1*d2*np.cos(q2) \
+        + self.I_2*self.m3*self.l1**2 + self.m3*self.l1**2 + self.m3*self.l2**2 + 2*self.m3*self.l1*self.l2*np.cos(q2) + self.I_3
+        M[0, 1] = self.m2*d2**2 + self.I_2 + self.m3*self.l2**2 + self.m2*self.l1*d2*np.cos(q2) + self.m3*self.l1*self.l2*np.cos(q2) + self.I_3
+        M[1, 0] = self.m2*d2**2 + self.m2*self.l1*d2*np.cos(q2) + self.I_2 + self.m3*self.l2**2 + self.m3*self.l1*self.l2*np.cos(q2) + self.I_3
+        M[1, 1] = self.m2*d2 + self.I_2 + self.m3*self.l2**2 + self.I_3
+        
+        return M
 
     def C(self, x):
         """
@@ -30,4 +39,13 @@ class ManiuplatorModel:
         in the exercise (2DoF planar manipulator with the object at the tip)
         """
         q1, q2, q1_dot, q2_dot = x
-        return NotImplementedError()
+        C = np.zeros((2, 2))
+        d1 = self.l1 / 2
+        d2 = self.l2 / 2
+        d1_1 = d1 * d1
+        d2_2 = d2 * d2
+        C[0, 0] = -(self.m2*self.l1*d2 + self.m3*self.l1*self.l2)*np.sin(q2)*q2_dot
+        C[0, 1] = (self.m2*self.l1*d2 + self.m3*self.l1*self.l2)*np.sin(q2)*q1_dot
+        C[1, 0] = -(self.m2*self.l1*d2 + self.m3*self.l1*self.l2)*np.sin(q2)*(q2_dot + q1_dot)
+        C[1, 1] = 0
+        return C
