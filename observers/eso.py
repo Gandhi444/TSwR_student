@@ -9,7 +9,6 @@ class ESO:
         self.W = W
         self.L = L
         self.state = np.pad(np.array(state), (0, A.shape[0] - len(state)))
-        print(self.state)
         self.Tp = Tp
         self.states = []
 

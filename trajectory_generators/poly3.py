@@ -4,7 +4,6 @@ from trajectory_generators.trajectory_generator import TrajectoryGenerator
 
 class Poly3(TrajectoryGenerator):
     def __init__(self, start_q, desired_q, T):
-        print(start_q)
         self.T = T
         self.q_0 = start_q
         self.q_k = desired_q
